@@ -19,12 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         arch:
-        - [amd64, gcc, g++, x86_64-linux-gnu, /usr/local]
+        # - [amd64, gcc, g++, x86_64-linux-gnu, /usr/local]
         - [arm64, aarch64-linux-gnu-gcc, aarch64-linux-gnu-g++, aarch64-linux-gnu, /usr/aarch64-linux-gnu]
-        - [mips, mips-linux-gnu-gcc, mips-linux-gnu-g++, mips-linux-gnu, /usr/mips-linux-gnu]
-        - [riscv64, riscv64-linux-gnu-gcc, riscv64-linux-gnu-g++, riscv64-linux-gnu, /usr/riscv64-linux-gnu]
-        - [armhf, arm-linux-gnueabihf-gcc, arm-linux-gnueabihf-g++, arm-linux-gnueabihf, /usr/arm-linux-gnueabihf]
-        - [armel, arm-linux-gnueabi-gcc, arm-linux-gnueabi-g++, arm-linux-gnueabi, /usr/arm-linux-gnueabi]
+        # - [mips, mips-linux-gnu-gcc, mips-linux-gnu-g++, mips-linux-gnu, /usr/mips-linux-gnu]
+        # - [riscv64, riscv64-linux-gnu-gcc, riscv64-linux-gnu-g++, riscv64-linux-gnu, /usr/riscv64-linux-gnu]
+        # - [armhf, arm-linux-gnueabihf-gcc, arm-linux-gnueabihf-g++, arm-linux-gnueabihf, /usr/arm-linux-gnueabihf]
+        # - [armel, arm-linux-gnueabi-gcc, arm-linux-gnueabi-g++, arm-linux-gnueabi, /usr/arm-linux-gnueabi]
         package_type:
         - rpm
         - deb
@@ -171,10 +171,9 @@ jobs:
         set -eu
 
         mkdir -p build
-        cd build
-        #export LDFLAGS='-static'
-        cmake ${{ steps.prepare.outputs.make_flags }} ..
-        make
+        docker run --rm dockcross/linux-arm64-musl > ./linux-arm64-musl
+        chmod +x ./linux-arm64-musl
+        ./linux-arm64-musl -a "-e LDFLAGS='-static'" bash -c "cd build && cmake ${{ steps.prepare.outputs.make_flags }} .. && make"
         sudo make install
     - name: build deb
       if: matrix.package_type == 'deb'
