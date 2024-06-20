@@ -172,6 +172,7 @@ jobs:
 
         mkdir -p build
         cd build
+        export LDFLAGS='-static'
         cmake ${{ steps.prepare.outputs.make_flags }} ..
         make
         sudo make install
