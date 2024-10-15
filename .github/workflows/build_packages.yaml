@@ -11,6 +11,9 @@ on:
     types:
     - published
 
+env:
+  LDFLAGS: "-static -static-libgcc -static-libstdc++"
+
 jobs:
   build_packages:
     runs-on: ubuntu-20.04
